@@ -1,4 +1,4 @@
-#Flash Notification Project Setup
+```Flash Notification Project Setup```
 
 
 1. Create Virtualenv
@@ -27,18 +27,22 @@
  ```shell
   python3 manage.py migrate
 ```
-7. create super user for accessing admin panel
+6. create super user for accessing admin panel
 ```shell
   python3 manage.py createsuperuser
 ```
+7. run this project by bellow command
+```shell
+  python3 manage.py runserver
+```
 
-5. register user from registration form and login with that user
+8. register user from registration form and login with that user
 
-6. Schedule New notification from admin panel and start celery servers. you can follow bellow staps
+9. Schedule New notification from admin panel and start celery servers. you can follow bellow staps
 
 
 
-#Setup celery
+```Setup celery```
 
 1. start celery beat server
 ```commandline
