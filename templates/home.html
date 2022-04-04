@@ -1,0 +1,142 @@
+{% include 'base.html' %}
+{% load static %}
+
+{% block extra-css %}
+<style>
+.overlay {
+     position: absolute;
+     top: 0;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     background: rgba(0, 0, 0, 0.7);
+     transition: opacity 500ms;
+     visibility: hidden;
+     opacity: 0;
+}
+
+.overlay:target {
+     visibility: visible;
+     opacity: 1;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+   <div class="content">
+      {% if not notification %}
+      <table class="table table-bordered">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">First</th>
+               <th scope="col">Last</th>
+               <th scope="col">Handle</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <th scope="row">1</th>
+               <td>Mark</td>
+               <td>Otto</td>
+               <td>@mdo</td>
+            </tr>
+            <tr>
+               <th scope="row">2</th>
+               <td>Jacob</td>
+               <td>Thornton</td>
+               <td>@fat</td>
+            </tr>
+            <tr>
+               <th scope="row">3</th>
+               <td colspan="2">Larry the Bird</td>
+               <td>@twitter</td>
+            </tr>
+         </tbody>
+      </table>
+      {% endif %}
+   </div>
+   <!-- <input type="button" id="notificationModel" data-toggle="modal" data-target=".myModal" hidden> -->
+   
+   {% for i in notifications %}
+   <div class="modal fade myModal" id="model_{{i.id}}" tabindex="-1" aria-labelledby="model-{{i.id}}" >
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="{{i.id}}_model_title">
+                  <a {% if i.link %} 
+                  class="hide-notification" 
+                  data-target="{% url 'hide-notification' i.id %}" href="{{i.link}}" 
+                  target="_blank" 
+                  {% endif %}>
+                  {{i.title}}
+                  </a>
+               </h5>
+               <button type="button" data-target="{% url 'hide-notification' i.id %}"  class="close hide-notification" data-dismiss="modal" id="{{i.id}}"  aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p class="card-text"><strong>content :</strong>{{i.text}}</p>
+               <p class="card-text"><strong>type :</strong>{{i.types}}</p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary hide-all-notification">Hide all</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   {% endfor %}
+
+   <!-- Websocket Popup model -->
+   <div class="modal fade SocketModel" id="socket_model" tabindex="-1">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="model_title">
+                  <a class="socket_model_title notification-title">
+                  </a>
+               </h5>
+               <button type="button" data-target="#" id=""  class="close hide-notification" data-dismiss="modal"  aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p class="card-text notification-text"><strong>content :</strong></p>
+               <p class="card-text notification-types"><strong>type :</strong></p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary hide-all-notification">Hide all</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra-js %}
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<!-- External cookies.js file for csrf token validation -->
+<script type="text/javascript" src="{% static 'js/cookies.js' %}"></script>
+
+<!-- External notification.js file for all custom js and websocket js -->
+<script type="text/javascript" src="{% static 'js/notification.js' %}"></script>
+
+
+{{ room_name|json_script:"room-name" }}
+<script>
+    // define variables
+    const is_notification = '{{notifications.count}}'
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+</script>
+
+{% endblock %}
